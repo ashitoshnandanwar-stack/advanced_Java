@@ -1,0 +1,50 @@
+package com.jdbc;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class jdbcCall 
+{
+	private static final String url = "jdbc:mysql://localhost:3306/mydb";
+	private static final String user = "root";
+	private static final String pass = "Ashu@123";
+	static Scanner sc = new Scanner(System.in);
+	static Connection con;
+	public static void main(String[] args) 
+	{
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			con = DriverManager.getConnection(url, user, pass);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			System.out.println("Enter id:");
+			int id = sc.nextInt();
+			String query = "{call empdetail(?)}";
+			
+			CallableStatement cs = con.prepareCall(query);
+			cs.setInt(1, id);
+			
+			ResultSet rs = cs.executeQuery();
+			while(rs.next())
+			{
+				System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+ rs.getInt(3)+" "+ rs.getInt(4));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+}
