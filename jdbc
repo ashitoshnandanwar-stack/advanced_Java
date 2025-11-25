@@ -1,0 +1,195 @@
+package com.jdbc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class jdbc 
+{
+	private static final String url = "jdbc:mysql://localhost:3306/mydb";
+	private static final String user = "root";
+	private static final String pass = "Ashu@123";
+	static Connection con;
+	static Scanner sc = new Scanner(System.in);
+	
+	public static void main(String[] args) 
+	{	
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			 con = DriverManager.getConnection(url, user, pass);
+			
+			int choice;
+			do {
+				System.out.println("Operation");
+				System.out.println("1.Insert");
+				System.out.println("2.Update");
+				System.out.println("3.Delete");
+				System.out.println("4.Display");
+				System.out.println("5.Exit");
+				
+				choice = sc.nextInt();
+				
+				switch(choice)
+				{
+				case 1: insert();
+				break;
+				case 2: update();
+				break;
+				case 3: delete();
+				break;
+				case 4: display();
+				break;
+				case 5: System.out.println("Thank you!!!!");
+				break;
+				default:System.out.println("Invalid choice");
+				
+				}
+			}while(choice != 5);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	
+	}
+	
+	static void insert()
+	{
+		try {
+		System.out.println("Enter name:");
+		String name = sc.next();
+		System.out.println("Enter age: ");
+		int age = sc.nextInt();
+		System.out.println("Enter mark:");
+		int mark = sc.nextInt();
+		
+		String query = "insert into students (name, age, marks) values (?,?,?)";
+		PreparedStatement ps = con.prepareStatement(query);
+		ps.setString(1, name);
+		ps.setInt(2, age);
+		ps.setInt(3, mark);
+		
+		int row = ps.executeUpdate();
+		
+		if(row > 0) {
+			System.out.println("Inserted");
+		}
+		else {
+			System.out.println("Not inserted");
+		}
+		System.out.println("------------------------------------------------------------------------------");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	static void update()
+	{
+		try {
+			
+			System.out.println("Enter id: ");
+			int id = sc.nextInt();
+			System.out.println("Enter mark:");
+			int mark = sc.nextInt();
+			
+			String query = "update student set marks = ? where id = ?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, mark);
+			ps.setInt(2, id);
+		
+			int row = ps.executeUpdate();
+			
+			if(row > 0) {
+				System.out.println("Updated");
+			}
+			else {
+				System.out.println("Not found");
+			}
+			System.out.println("------------------------------------------------------------------------------");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+	}
+	
+	static void delete()
+	{
+		try {
+		
+			System.out.println("Enter id: ");
+			int id = sc.nextInt();
+			
+			String query = "delete from student where id = ?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+	
+			int row = ps.executeUpdate();
+			
+			if(row > 0) {
+				System.out.println("Deleted");
+			}
+			else {
+				System.out.println("Not found");
+			}
+			System.out.println("------------------------------------------------------------------------------");
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+	}
+	
+	static void display()
+	{
+		try {
+			
+		String query = "Select * from students";
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(query);
+	
+		while(rs.next())
+		{
+			System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+rs.getInt(3)+" "+rs.getInt(4));
+		}
+		System.out.println("-----------------------------------------------------------------------------------");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
