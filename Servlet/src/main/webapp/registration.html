@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Registration</title>
+</head>
+<body>
+	<h2>Student Registration Form</h2>
+	<form action="RegistrationServlet" method="post">
+		Student ID: <input type="text" name="studentId" required><br><br>
+		Student Name: <input type="text" name="studentName" required><br><br>
+		Email: <input type="email" name="email" required><br><br>
+		
+		Gender:
+		<input type="radio" name="gender" value="Male"> Male
+		<input type="radio" name="gender" value="Female"> Female
+		<input type="radio" name="gender" value="Other"> Other
+		<br><br>
+		
+		Course: 
+		<select name="course">
+			<option value="Java">Java</option>
+			<option value="Python">Python</option>
+			<option value="C++">C++</option>
+			<option value="Data Science">Data Science</option>
+		</select>
+		<br><br>
+		<input type="submit" value="Register">
+	
+	</form>
+</body>
+</html>
