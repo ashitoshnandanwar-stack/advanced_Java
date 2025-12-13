@@ -2,6 +2,9 @@ package com.cdac;
 
 import java.io.IOException;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,12 +19,19 @@ public class LoginServlet extends HttpServlet
 		res.setContentType("text/html");
 		
 		String uname = req.getParameter("user");
-		String password = req.getParameter("pass");
+		String pass = req.getParameter("pass");
 		
-		if(uname.equals("ashitosh") && password.equals("12345"))
+		Session session = HibernateUtil.getSession();
+		Query<User> q = session.createQuery("from User where username = :u and password = :p", User.class);
+		q.setParameter("u", uname );
+		q.setParameter("p", pass);
+		User user = q.uniqueResult();
+		session.close();
+		
+		if(user != null)
 		{
-			HttpSession session = req.getSession();
-			session.setAttribute("username", uname);
+			HttpSession hs = req.getSession();
+			hs.setAttribute("username", uname);
 			
 			res.sendRedirect("shopping.html");
 			
