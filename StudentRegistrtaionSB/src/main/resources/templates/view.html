@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Students</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 70%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Registered Students</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Course</th>
+    </tr>
+
+    <!-- Loop through student list -->
+    <tr th:each="s : ${students}">
+        <td th:text="${s.id}">1</td>
+        <td th:text="${s.name}">Name</td>
+        <td th:text="${s.email}">Email</td>
+        <td th:text="${s.course}">Course</td>
+    </tr>
+</table>
+
+<br>
+<a href="/register"><button>Register New Student</button></a>
+
+</body>
+</html>
