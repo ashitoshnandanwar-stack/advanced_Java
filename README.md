@@ -123,6 +123,48 @@ Layers in DAO Pattern
 - Deployment tools install and manage apps.
 - Web app life cycle includes init, service, destroy.
 - J2EE supports web services for app communication.
+## Servlets: Dynamic Content Generation - Comprehensive Study Guide
+- Servlet is a Java class that runs on a web server and handles client requests, typically HTTP requests. Servlets are used to create dynamic web content and form the foundation of Java web applications.
+### Methods:
+- init(): Initialize the servlet
+- service(): Handle requests
+- destroy(): Clean up resources
+- getServletConfig(): Get servlet configuration
+- getServletInfo(): Get servlet information
+###  Cookies
+What are Cookies?
+- Small pieces of data stored on the client side
+- Sent with every HTTP request to the server
+- Limited to 4KB per cookie
+- 
+#### Cookie Methods:
+- setMaxAge(int seconds): Set expiry time (-1 for session cookie)
+- setPath(String path): Set cookie path
+- setDomain(String domain): Set cookie domain
+- setSecure(boolean flag): HTTPS only
+- setHttpOnly(boolean flag): Prevent JavaScript access
 
+#### HttpSession Methods:
+- getSession() or getSession(true): Create new session if doesn't exist
+- getSession(false): Return existing session or null
+- setAttribute(String name, Object value): Store data
+- getAttribute(String name): Retrieve data
+- removeAttribute(String name): Remove specific attribute
+- invalidate(): Destroy session
+- getId(): Get session ID
+- isNew(): Check if session is new
+- setMaxInactiveInterval(int seconds): Set timeout
+- getMaxInactiveInterval(): Get timeout
 
+  | Feature              | Cookies                         | HttpSession                               |
+| -------------------- | ------------------------------- | ----------------------------------------- |
+| **Storage**          | Client-side (browser)           | Server-side                               |
+| **Security**         | Less secure                     | More secure                               |
+| **Data Size**        | Limited (≈ 4 KB)                | Practically unlimited                     |
+| **Data Type**        | String only                     | Any Java object                           |
+| **Performance**      | Less server load                | More server load                          |
+| **Persistence**      | Can persist (stored in browser) | Session-based (expires on logout/timeout) |
+| **Lifetime Control** | Controlled by expiry time       | Controlled by server                      |
+| **Accessibility**    | Accessible on client            | Accessible only on server                 |
+| **Use Case**         | Remember user preferences       | Login session, user data                  |
 
