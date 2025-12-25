@@ -83,4 +83,19 @@ Layers in DAO Pattern
 
 <img width="800" height="267" alt="image" src="https://github.com/user-attachments/assets/5206acb6-d48b-42cd-9b67-1a3e6880e193" />
 
+###  1. J2EE Overview (What is J2EE?)
+- J2EE (Java 2 Enterprise Edition) is a platform used to build large-scale, web-based, enterprise applications.
+- In simple words: J2EE is a set of rules + APIs that helps Java developers create web applications like banking, e-commerce, ERP systems.
+- J2EE provides: Web application, Database connectivity, Security, Transaction management, Web services
+
+### 2. J2EE Container
+- A container is a runtime environment that runs Java web components.
+- Think like this: Container = Manager who takes care of your web application
+- Types of Containers:
+-- Web Container → runs Servlets, JSP
+-- EJB Container → runs Enterprise Java Beans
+- Container provides: Object creation, Security, Transaction handling
+
+- Life cycle management 👉 Developer writes logic, container manages everything else
+
 
