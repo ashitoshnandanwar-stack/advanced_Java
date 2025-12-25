@@ -1,7 +1,7 @@
 # advanced_Java
 lab problems
 
-JDBC Drivers type
+## JDBC Drivers type
 
 | Type   | Name        | Speed     | Extra Software | Usage          |
 | ------ | ----------- | --------- | -------------- | -------------  |
