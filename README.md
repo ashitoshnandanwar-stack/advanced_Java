@@ -16,15 +16,9 @@ lab problems
 <img width="400" height="350" alt="image" src="https://github.com/user-attachments/assets/8710aaf1-5a37-49ba-846c-f7596839f4ad" />
 
 ### JDBC Architecture Layers (Top to Bottom)
-Java Application
-      ↓
-JDBC API
-      ↓
-DriverManager
-      ↓
-JDBC Driver
-      ↓
-Database
+MCQ Memory Trick
+A-J-D-D-D
+Application → JDBC API → DriverManager → Driver → Database
 
 1️⃣ Application Layer (Java Program)
 This is your Java code
