@@ -91,11 +91,19 @@ Layers in DAO Pattern
 ### 2. J2EE Container
 - A container is a runtime environment that runs Java web components.
 - Think like this: Container = Manager who takes care of your web application
-- Types of Containers:
--- Web Container → runs Servlets, JSP
--- EJB Container → runs Enterprise Java Beans
+- Types of Containers: 1. Web Container → runs Servlets, JSP
+ 2. EJB Container → runs Enterprise Java Beans
 - Container provides: Object creation, Security, Transaction handling
 
 - Life cycle management 👉 Developer writes logic, container manages everything else
+
+### 3. Packaging Web Applications
+- Packaging means grouping all files together so they can be deployed.
+#### Web application contains:
+- HTML / JSP files
+- Servlets
+- CSS / JS
+- Configuration files
+- Packaged as: WAR file (Web Archive)
 
 
