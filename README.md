@@ -17,8 +17,8 @@ lab problems
 
 ### JDBC Architecture Layers (Top to Bottom)
 MCQ Memory Trick
-A-J-D-D-D
-Application → JDBC API → DriverManager → Driver → Database
+-A-J-D-D-D
+-Application → JDBC API → DriverManager → Driver → Database
 
 1️⃣ Application Layer (Java Program)
 This is your Java code
