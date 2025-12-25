@@ -11,3 +11,4 @@ lab problems
 | Type 4 | Thin Driver | Fastest   | None           | ✅ Mostly used |
 
 - Type 4 JDBC driver is the most commonly used because it is fast, platform independent, and pure Java-based.
+<img width="831" height="1008" alt="image" src="https://github.com/user-attachments/assets/8710aaf1-5a37-49ba-846c-f7596839f4ad" />
