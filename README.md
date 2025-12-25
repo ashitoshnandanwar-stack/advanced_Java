@@ -79,3 +79,8 @@ Layers in DAO Pattern
 3️⃣ Database Layer
 - Actual database (MySQL, Oracle, etc.)
 
+## J2EE
+
+<img width="800" height="267" alt="image" src="https://github.com/user-attachments/assets/5206acb6-d48b-42cd-9b67-1a3e6880e193" />
+
+
