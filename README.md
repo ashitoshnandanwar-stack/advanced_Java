@@ -60,4 +60,22 @@ MySQL,
 Oracle,
 PostgreSQL,
 
+## 🔹 What is DAO Pattern?
+- DAO Pattern separates database access logic from business logic.
+- It provides a clean structure to interact with the database using JDBC (or Hibernate).
+- Application → JDBC API → DAO → Database
+Layers in DAO Pattern
+
+1️⃣ Application / Service Layer
+- Contains business logic
+- Calls DAO methods
+- ❌ No SQL here
+
+2️⃣ DAO Layer (Main part)
+- Contains all JDBC code
+- SQL queries (SELECT, INSERT, UPDATE)
+- Uses JDBC API
+
+3️⃣ Database Layer
+- Actual database (MySQL, Oracle, etc.)
 
