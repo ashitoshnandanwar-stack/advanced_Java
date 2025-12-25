@@ -156,7 +156,7 @@ What are Cookies?
 - setMaxInactiveInterval(int seconds): Set timeout
 - getMaxInactiveInterval(): Get timeout
 
-  | Feature              | Cookies                         | HttpSession                               |
+| Feature              | Cookies                         | HttpSession                               |
 | -------------------- | ------------------------------- | ----------------------------------------- |
 | **Storage**          | Client-side (browser)           | Server-side                               |
 | **Security**         | Less secure                     | More secure                               |
