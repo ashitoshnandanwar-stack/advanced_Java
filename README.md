@@ -106,4 +106,23 @@ Layers in DAO Pattern
 - Configuration files
 - Packaged as: WAR file (Web Archive)
 
+### 5. Deployment Tools
+- Deployment tools are used to install and manage web applications on servers.
+
+### 6. Web Application Life Cycle
+- Life cycle means stages of a web application.
+#### Steps:
+- 1️⃣ Loading
+- 2️⃣ Initialization
+- 3️⃣ Request handling
+- 4️⃣ Destruction
+  
+- J2EE is a platform for enterprise web applications. 
+- Container manages web components. 
+- Web apps are packaged as WAR files.
+- Deployment tools install and manage apps.
+- Web app life cycle includes init, service, destroy.
+- J2EE supports web services for app communication.
+
+
 
