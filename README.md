@@ -11,6 +11,67 @@ lab problems
 | Type 4 | Thin Driver | Fastest   | None           | ✅ Mostly used |
 
 - Type 4 JDBC driver is the most commonly used because it is fast, platform independent, and pure Java-based.
+
+## Architecture of JDBC
 <img width="400" height="350" alt="image" src="https://github.com/user-attachments/assets/8710aaf1-5a37-49ba-846c-f7596839f4ad" />
 
+### JDBC Architecture Layers (Top to Bottom)
+Java Application
+      ↓
+JDBC API
+      ↓
+DriverManager
+      ↓
+JDBC Driver
+      ↓
+Database
 
+1️⃣ Application Layer (Java Program)
+This is your Java code
+Uses JDBC API classes & interfaces
+(Connection, Statement, PreparedStatement, ResultSet)
+
+2️⃣ JDBC API Layer
+Provided by Java (JDK)
+Contains JDBC interfaces
+Acts as a bridge between Java app and driver
+📌 Important interfaces:
+DriverManager
+Connection
+Statement
+PreparedStatement
+ResultSet
+👉 Converts Java calls into driver-understandable calls
+
+3️⃣ Driver Manager Layer
+Manages JDBC drivers
+Finds the correct driver
+Establishes connection with database
+
+4️⃣ JDBC Driver Layer
+Database-specific driver
+Converts JDBC calls into database protocol
+Communicates directly with DB
+📌 Example:
+MySQL Driver
+Oracle Driver
+👉 Most used: Type 4 (Thin Driver)
+
+5️⃣ Database Layer
+Actual database
+Stores data
+Executes SQL queries
+📌 Examples:
+MySQL
+Oracle
+PostgreSQL
+
+Java Application
+      ↓
+JDBC API
+      ↓
+DriverManager
+      ↓
+JDBC Driver
+      ↓
+Database
