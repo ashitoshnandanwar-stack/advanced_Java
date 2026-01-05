@@ -189,3 +189,32 @@ if(getBalance(accountId) >= withdrawAmount) {
 ```
 I - Isolation : Concurrent transactions don't interfere with each other. <br>
 D - Durability : Once committed, changes are permanent (survive system crashes).
+
+## Main component of hibernate
+| Component         | Role                       |
+| ----------------- | -------------------------- |
+| Configuration     | Loads `hibernate.cfg.xml`  |
+| SessionFactory    | Heavy, one per DB          |
+| Session           | Lightweight, DB operations |
+| Transaction       | ACID compliance            |
+| Query             | Executes HQL / SQL         |
+| Persistent Object | Entity class               |
+```
+Java App
+ ↓
+Configuration
+ ↓
+SessionFactory
+ ↓
+Session
+ ↓
+Database
+```
+- SessionFactory is thread-safe
+- Session is not thread-safe
+| Component      | Thread-Safe? | Reason & Design Purpose                                                 |
+|----------------|--------------|-------------------------------------------------------------------------|
+| SessionFactory | Yes          | Immutable and heavyweight; meant to be shared across the entire         |
+|                |              | application.                                                            |
+| Session        | No           | Mutable, lightweight, and tied to a single unit of work (e.g., one      |
+|                |              | request or transaction).                                                |
