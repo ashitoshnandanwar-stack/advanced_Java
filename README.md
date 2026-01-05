@@ -212,10 +212,146 @@ Database
 ```
 - SessionFactory is thread-safe
 - Session is not thread-safe
-  
+- Client → Servlet → DAO → Hibernate → DB
+
+
 | Component      | Thread-Safe? | Reason & Design Purpose                                                 |
 |----------------|--------------|-------------------------------------------------------------------------|
 | SessionFactory | Yes          | Immutable and heavyweight; meant to be shared across the entire         |
 |                |              | application.                                                            |
 | Session        | No           | Mutable, lightweight, and tied to a single unit of work (e.g., one      |
 |                |              | request or transaction).                                                |
+
+
+| State          | Meaning                                 |
+| -------------- | --------------------------------------- |
+| **Transient**  | New object, not linked to DB or Session |
+| **Persistent** | Object associated with Session & DB     |
+| **Detached**   | DB has data, Session closed             |
+| **Removed**    | Deleted from DB                         |
+```
+eg.
+session.save(obj);      // Transient → Persistent
+session.close();        // Persistent → Detached
+session.update(obj);    // Detached → Persistent
+session.delete(obj);    // Persistent → Removed
+```
+
+### Hibernate Catching
+<img width="764" height="425" alt="image" src="https://github.com/user-attachments/assets/808fe9b1-f385-4830-939f-eaf4513fbb7c" />
+
+| Cache           | Scope          | Mandatory  |
+| --------------- | -------------- | ---------- |
+| **First-level** | Session        |  YES       |
+| Second-level    | SessionFactory |  Optional  |
+| Query cache     | Query          |  Optional  |
+
+- Hibernate ALWAYS has first-level cache (Session cache)
+
+### Hibernate Relationships & mappedBy
+
+| Relationship     | Join Table |
+| ---------------- | ---------- |
+| One-to-One       |     No     |
+| One-to-Many      |     No     |   
+| Many-to-One      |     No     |
+| **Many-to-Many** |     YES    |
+
+### Cascade types
+
+| Cascade    | Meaning        |
+| ---------- | -------------- |
+| PERSIST    | Save child     |
+| MERGE      | Merge child    |
+| **REMOVE** | Delete child   |
+| REFRESH    | Reload         |
+| **ALL**    | All operations |
+
+### Fetch Types
+
+| Relationship  | Default Fetch |
+| ------------- | ------------- |
+| OneToMany     | LAZY          |
+| ManyToMany    | LAZY          |
+| **ManyToOne** | **EAGER**     |
+| OneToOne      | EAGER         |
+
+### Named Queries (SAFE & FAST)
+- Why Named Queries? <br>
+Defined at entity level <br>
+Prevent SQL Injection <br>
+Precompiled <br>
+
+
+### four types of entity relationships in Hibernate/JPA
+1. One to One : One entity is associated with exactly one instance of another entity. <br>
+Example: User ↔ Profile (each user has one profile) <br>
+```
+@Entity
+public class User {
+    @Id
+    private Long id;
+    
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
+}
+@Entity
+public class Profile {
+    @Id
+    private Long id;
+    
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+}
+```
+2. One to Many : One entity is associated with multiple instances of another entity. <br>
+Example: Department → Employees (one department has many employees)
+```
+@Entity
+public class Department {
+    @Id
+    private Long id;
+    
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees;
+}
+@Entity
+public class Employee {
+    @Id
+    private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+}
+```
+3. Many to One : Multiple instances of one entity are associated with one instance of another. <br>
+Example: Employees → Department (many employees belong to one department)
+
+5. Many to Many : Multiple instances of one entity are associated with multiple instances of another. <br>
+Example: Students ↔ Courses (students enroll in many courses, courses have many students).
+```
+@Entity
+public class Student {
+    @Id
+    private Long id;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "student_course",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses;
+}
+
+@Entity
+public class Course {
+    @Id
+    private Long id;
+    
+    @ManyToMany(mappedBy = "courses")
+    private Set<Student> students;
+}
+```
