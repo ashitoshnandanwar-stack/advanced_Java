@@ -212,6 +212,7 @@ Database
 ```
 - SessionFactory is thread-safe
 - Session is not thread-safe
+  
 | Component      | Thread-Safe? | Reason & Design Purpose                                                 |
 |----------------|--------------|-------------------------------------------------------------------------|
 | SessionFactory | Yes          | Immutable and heavyweight; meant to be shared across the entire         |
