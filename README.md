@@ -168,3 +168,24 @@ What are Cookies?
 | **Accessibility**    | Accessible on client            | Accessible only on server                 |
 | **Use Case**         | Remember user preferences       | Login session, user data                  |
 
+#### How to prevent sql injection in jdbc?
+ - Prepared statement (best practice).
+ - Input validation
+ - Stored procedure
+ - Least priviledge
+
+#### What is a Transaction?
+A transaction is a group of operations that must all succeed or all fail together. Think of it like a bank transfer - money must leave one account AND enter another, or neither should happen.
+##### ACID Properties
+A - Atomcity : All operations succeed or all fail (all-or-nothing). <br>
+C - Consistency : Database moves from one valid state to another. Business rules are maintained. <br>
+```
+// Check constraint before transaction
+if(getBalance(accountId) >= withdrawAmount) {
+    // Proceed with transaction
+} else {
+    throw new InsufficientFundsException();
+}
+```
+I - Isolation : Concurrent transactions don't interfere with each other. <br>
+D - Durability : Once committed, changes are permanent (survive system crashes).
