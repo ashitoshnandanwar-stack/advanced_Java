@@ -964,3 +964,239 @@ public String upload(@RequestParam MultipartFile file) {
 <hr>
 
 ## 🚀 Spring Boot Essentials
+
+### 🔹 Why Spring Boot?
+```
+Traditional Spring applications require:
+XML configurations
+Manual dependency management
+Server configuration (Tomcat setup)
+Boilerplate code
+
+Spring Boot solves these problems by providing:
+Auto-configuration
+Embedded servers (Tomcat/Jetty)
+Opinionated defaults
+Faster development
+Production-ready features (Actuator)
+Goal: “Just run the app” – no heavy configuration.
+```
+
+### 🔹 Spring Boot Overview
+
+- @SpringBootApplication – springboot has single entry point
+```
+@SpringBootApplication
+public class MyApp {
+    public static void main(String[] args) {
+        SpringApplication.run(MyApp.class, args);
+    }
+}
+```
+| JAR (Java ARchive)                            | WAR (Web ARchive)                                                      |
+| --------------------------------------------- | ---------------------------------------------------------------------- |
+| Used for **Java libraries / standalone apps** | Used for **Web applications**                                          |
+| Contains `.class` files, packages, resources  | Contains Servlets, JSP, HTML, CSS, JS                                  |
+| Runs with `java -jar app.jar`                 | Deployed on a **Web Server / Servlet Container** (Tomcat, JBoss, etc.) |
+| No predefined web structure                   | Has a fixed web structure (`WEB-INF/`)                                 |
+| Used in core Java / Spring Boot apps          | Used in Servlet, JSP, Spring MVC apps                                  |
+
+ ```
+pom.xml (Project Object Model) is the main configuration file of Maven.
+It tells Maven how to build your project, which dependencies to download, and what type of project it is (JAR/WAR, etc.).
+It is used in all Maven-based Java projects (Servlet, JSP, Spring, Spring Boot, etc.).
+```
+
+<hr>
+
+## 🌿 Spring Data Module
+
+Spring Data simplifies data access by removing boilerplate DAO code. <br>
+It provides a consistent repository abstraction for different data stores (JPA, MongoDB, Redis, etc.). <br>
+
+Main benefit: You write interfaces, Spring generates implementations at runtime.
+
+### 🔹 Spring Data JPA
+- Spring Data JPA provides Repository support for JPA/Hibernate.
+- Instead of writing DAO classes, you create an interface:
+```
+public interface StudentRepository 
+        extends JpaRepository<Student, Integer> {
+}
+```
+
+Spring automatically provides: <br>
+- save()
+- findById()
+- findAll()
+- deleteById()
+- count() <br>
+
+No implementation class needed.
+
+
+### 🔹 CrudRepository vs JpaRepository
+
+Hierarchy:
+```
+Repository
+   └── CrudRepository
+           └── PagingAndSortingRepository
+                   └── JpaRepository
+
+| Feature              | CrudRepository  | JpaRepository   |
+| -------------------- | --------------  | -------------   |
+| Basic CRUD           | ✅              | ✅             |
+| Pagination & Sorting | ❌              | ✅             |
+| Batch operations     | ❌              | ✅             |
+| JPA-specific methods | ❌              | ✅             |
+| flush(), saveAll()   | ❌              | ✅             |
+
+flush() sends all pending SQL operations (INSERT, UPDATE, DELETE) from memory to the database,
+without committing the transaction.
+```
+
+Example:
+```
+public interface UserRepo 
+        extends CrudRepository<User, Long> {
+}
+
+public interface UserRepo 
+        extends JpaRepository<User, Long> {
+}
+```
+- Most real projects use JpaRepository.
+
+### 🔹 Custom Queries using @Query
+
+When method naming is not enough, use @Query. <br>
+
+JPQL Query
+```
+@Query("from Student s where s.age > :age")
+List<Student> findAdultStudents(@Param("age") int age);
+```
+Native SQL Query
+```
+@Query(
+  value = "select * from student where city = ?1",
+  nativeQuery = true
+)
+List<Student> findByCity(String city);
+```
+Update/Delete Query
+```
+@Modifying
+@Query("update Student s set s.name = :name where s.id = :id")
+void updateName(@Param("id") int id, 
+                @Param("name") String name);
+
+(Requires @Transactional)
+```
+
+<hr>
+
+## 🌟 Spring AOP (Aspect-Oriented Programming)
+
+- AOP (Aspect-Oriented Programming) is a way to separate common logic from your main business code.
+
+Example without AOP:
+```
+login() {
+    log();
+    checkSecurity();
+    doBusiness();
+    commit();
+}
+You must write logging, security, transaction code in every method.
+```
+With AOP:
+```
+login() {
+    doBusiness();
+}
+
+And AOP automatically runs:
+Before method → logging / security
+After method → commit / cleanup
+```
+
+Real-life example
+```
+Think of a college classroom:
+Teaching = main work (business logic)
+Attendance, bell, announcements = common tasks
+Teacher focuses only on teaching.
+Attendance and bell happen automatically.
+That is AOP.
+```
+
+### AOP Terminology and annotations:
+*1️⃣ Aspect*
+An Aspect is a class that contains cross-cutting logic (like logging, security, transactions).
+```
+@Aspect
+@Component
+public class LoggingAspect {
+}
+```
+Aspect = Container of AOP logic
+
+*2️⃣ Join Point*
+A Join Point is a point in the program where advice can be applied. <br>
+In Spring AOP, a join point is always a method execution. <br>
+Example:
+```
+Calling saveUser() or login() method → each is a join point.
+```
+You don’t create it; Spring identifies it.
+
+*3️⃣ Pointcut*
+A Pointcut defines which methods should be intercepted. <br>
+```
+@Pointcut("execution(* com.app.service.*.*(..))")
+public void serviceMethods() {}
+```
+Pointcut = Rule to select join points <br>
+(“Apply AOP to all methods in service package”)
+
+4️⃣ Advice
+Advice is the actual code that runs before, after, or around the method.<br>
+
+Types of Advice:
+| Annotation        | When it runs                  |
+| ----------------- | ----------------------------- |
+| `@Before`         | Before method execution       |
+| `@After`          | After method (always)         |
+| `@AfterReturning` | After successful return       |
+| `@AfterThrowing`  | When exception occurs         |
+| `@Around`         | Before & after (full control) |
+
+Example:
+```
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.app.service.*.*(..))")
+    public void logBefore() {
+        System.out.println("Method started...");
+    }
+
+    @After("execution(* com.app.service.*.*(..))")
+    public void logAfter() {
+        System.out.println("Method ended...");
+    }
+}
+```
+Relationship <br>
+- Join Point → A method execution
+- Pointcut → Which methods to target
+- Advice → What to run
+- Aspect → Class that contains pointcuts + advice <br>
+
+Together they enable AOP in Spring.
+
+<hr>
+
