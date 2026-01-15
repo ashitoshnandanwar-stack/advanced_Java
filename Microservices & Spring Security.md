@@ -261,3 +261,198 @@ Requires patterns like:
     Event-driven communication
     Eventual consistency
 ```
+
+<hr><hr><hr>
+
+# Spring Security
+
+## 🔹 Testing in Spring
+
+Spring provides strong support for testing using: <br>
+- JUnit / TestNG
+- Spring Test Framework
+- Mockito
+- MockMvc
+
+Testing in Spring is mainly divided into: <br>
+- Unit Testing – test a single class/component
+- Integration Testing – test interaction between layers (Controller, Service, DB)
+
+| Type                   | Layer Tested     | Tools                     |
+| ---------------------- | ---------------- | ------------------------- |
+| Unit Test – Controller | Only Controller  | `@WebMvcTest`, MockMvc    |
+| Unit Test – Service    | Business Logic   | JUnit, Mockito            |
+| Integration Test       | Full Application | `@SpringBootTest`         |
+| REST Controller Test   | API behavior     | MockMvc + JSON validation |
+
+### 1️⃣ Unit Testing of Spring MVC Controllers
+Goal: Test only the Controller layer without starting the full server. <br>
+
+Tools: <br>
+- @WebMvcTest
+- MockMvc
+- Mockito <br>
+
+Example:
+```
+@WebMvcTest(UserController.class)
+class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private UserService userService;
+
+    @Test
+    void testGetUser() throws Exception {
+        when(userService.getUser(1)).thenReturn(new User(1, "Amit"));
+
+        mockMvc.perform(get("/user/1"))
+               .andExpect(status().isOk())
+               .andExpect(jsonPath("$.name").value("Amit"));
+    }
+}
+
+@WebMvcTest → Load only controller layer
+MockMvc → Perform fake HTTP requests
+Mockito → Mock service/repository dependencies
+```
+
+Here: <br>
+- Only UserController is loaded
+- UserService is mocked
+- No real DB or server is used
+
+### 2️⃣ Unit Testing of Spring Service Layer
+
+Goal: Test business logic independently. <br>
+
+Tools: <br>
+- JUnit
+- Mockito <br>
+
+Example:
+```
+class UserServiceTest {
+
+    @InjectMocks
+    private UserService userService;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Test
+    void testSaveUser() {
+        User u = new User(1, "Ravi");
+        when(userRepository.save(u)).thenReturn(u);
+
+        User result = userService.saveUser(u);
+        assertEquals("Ravi", result.getName());
+    }
+}
+```
+Here: <br>
+- Only Service logic is tested
+- Repository is mocked
+
+### 3️⃣ Integration Testing of Spring MVC Applications (REST API)
+
+Goal: Test end-to-end flow (Controller → Service → Repository → DB) <br>
+
+Tools: <br>
+- @SpringBootTest
+- @AutoConfigureMockMvc
+- Real or in-memory DB (H2) <br>
+
+Example:
+```
+@SpringBootTest
+@AutoConfigureMockMvc
+class UserIntegrationTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void testCreateUser() throws Exception {
+        mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"Neha\"}"))
+                .andExpect(status().isOk());
+    }
+}
+```
+
+Here: <br>
+- Full Spring context loads
+- All layers are involved
+- Tests real behavior
+
+### 4️⃣ Unit Testing Spring MVC Controllers with REST
+
+This is similar to Controller unit testing but focuses on REST endpoints. <br>
+
+Key points: <br>
+- Use @WebMvcTest
+- Use MockMvc
+- Mock Service layer
+- Validate: HTTP status, JSON response, Headers <br>
+
+Example checks:
+```
+.andExpect(status().isOk())
+.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+.andExpect(jsonPath("$.id").value(1));
+```
+
+<hr>
+
+## Securing Web Application with Spring Security 
+
+Spring Security is the standard framework used to secure Spring-based applications. <br>
+It provides powerful features for: <br>
+
+- Authentication (Who are you?)
+- Authorization (What are you allowed to do?)
+- Protection against common attacks (CSRF, XSS, session fixation, etc.)
+
+### 1️⃣ What is Spring Security?
+
+Spring Security is a module of Spring that handles: <br>
+- Login & logout
+- Password encryption
+- Role-based access control
+- Session management
+- API security <br>
+
+It works using a filter chain that intercepts every HTTP request before it reaches your controller.
+
+- Basic Authentication in Spring Boot uses httpBasic() to secure APIs by sending Base64-encoded credentials in every request, and is suitable for simple or internal REST services when used over HTTPS.
+
+- JWT is a secure, stateless authentication mechanism where a server issues a signed token after login, and the client uses that token to access protected APIs in Spring Boot applications.
+- 🛠 JWT in Spring Boot (Concept)
+```
+Custom Authentication Filter
+Custom JWT Utility (generate & validate token)
+Custom Security Configuration
+```
+
+⚖ Basic Auth vs JWT
+
+| Basic Auth                          | JWT                           |
+| ----------------------------------- | ----------------------------- |
+| Username & password sent every time | Token sent                    |
+| Less secure                         | More secure                   |
+| Simple                              | Scalable                      |
+| Session-based / simple stateless    | Fully stateless               |
+| Not good for public APIs            | Best for REST & Microservices |
+
+
+- Spring Boot authenticates users by validating credentials from the database and authorizes access using roles (e.g., USER, ADMIN) to control which endpoints a user can access.
+
+| Method                        | Security Level | Why                                                                                                                             |
+| ----------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Basic Auth**                | 🔴 Low         | Username & password are sent with *every request*. If HTTPS is misconfigured, credentials can be stolen easily.                 |
+| **DB + Session (Form Login)** | 🟡 Medium      | Password is checked from DB, session ID is stored on server. Secure for monolithic apps, but not ideal for distributed systems. |
+| **JWT**                       | 🟢 High        | No password sent after login. Only a signed token is used. Stateless, tamper-proof, perfect for APIs & microservices.           |
