@@ -769,6 +769,15 @@ Types of Named Queries
     resultClass = Student.class
 )
 ```
+| HQL Named Query                               | Native SQL Named Query                   |
+| --------------------------------------------- | ---------------------------------------- |
+| Written in **HQL (Hibernate Query Language)** | Written in **Database-specific SQL**     |
+| Uses **Entity names & fields**                | Uses **Table names & columns**           |
+| Database independent                          | Database dependent                       |
+| Automatically mapped to objects               | You must map result manually (if needed) |
+| Works across any DB (MySQL, Oracle, etc.)     | May change for different DBs             |
+
+
 Criteria Query (Type-safe) – Hibernate / JPA
 ```
 The Criteria API provides a type-safe way to build queries using Java objects instead of writing HQL/SQL strings.
