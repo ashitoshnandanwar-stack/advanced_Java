@@ -1143,7 +1143,7 @@ That is AOP.
 
 ### AOP Terminology and annotations:
 *1️⃣ Aspect*
-An Aspect is a class that contains cross-cutting logic (like logging, security, transactions).
+- An Aspect is a class that contains cross-cutting logic (like logging, security, transactions).
 ```
 @Aspect
 @Component
@@ -1153,7 +1153,7 @@ public class LoggingAspect {
 Aspect = Container of AOP logic
 
 *2️⃣ Join Point*
-A Join Point is a point in the program where advice can be applied. <br>
+- A Join Point is a point in the program where advice can be applied. <br>
 In Spring AOP, a join point is always a method execution. <br>
 Example:
 ```
@@ -1162,7 +1162,7 @@ Calling saveUser() or login() method → each is a join point.
 You don’t create it; Spring identifies it.
 
 *3️⃣ Pointcut*
-A Pointcut defines which methods should be intercepted. <br>
+- A Pointcut defines which methods should be intercepted. <br>
 ```
 @Pointcut("execution(* com.app.service.*.*(..))")
 public void serviceMethods() {}
@@ -1170,8 +1170,8 @@ public void serviceMethods() {}
 Pointcut = Rule to select join points <br>
 (“Apply AOP to all methods in service package”)
 
-4️⃣ Advice
-Advice is the actual code that runs before, after, or around the method.<br>
+*4️⃣ Advice*
+- Advice is the actual code that runs before, after, or around the method.<br>
 
 Types of Advice:
 | Annotation        | When it runs                  |
