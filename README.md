@@ -1200,3 +1200,179 @@ Together they enable AOP in Spring.
 
 <hr>
 
+🌐 Building REST Services with Spring
+
+### 🔹 Introduction to Web Services
+
+A Web Service allows applications to communicate over a network using standard protocols (HTTP). <br>
+
+Purpose: <br>
+- Platform independent communication
+- Language independent
+- Data exchange between systems
+
+Types: <br>
+- SOAP Web Services
+- RESTful Web Services
+
+### 🔹 SOAP vs RESTful Web Services
+
+| Feature     | SOAP              | REST            |
+| ----------- | ----------------- | --------------- |
+| Protocol    | Strict XML-based  | Uses HTTP       |
+| Format      | Only XML          | JSON, XML, Text |
+| Complexity  | Heavy & complex   | Lightweight     |
+| Performance | Slower            | Faster          |
+| Ease of use | Difficult         | Simple          |
+| Popularity  | Enterprise legacy | Modern APIs     |
+
+👉 Today, most applications use REST.
+
+### 🔹 RESTful Web Service – Introduction
+
+REST = Representational State Transfer <br>
+
+Principles: <br>
+- Uses HTTP methods
+- Stateless
+- Resource-based URLs
+- Data usually in JSON
+
+HTTP Methods: <br>
+- GET – Read
+- POST – Create
+- PUT – Update
+- DELETE – Delete
+
+Example: <br>
+- GET    /users
+- POST   /users
+- PUT    /users/1
+- DELETE /users/1
+
+### 🔹 Create RESTful Web Service using Spring Boot
+```
+@RestController
+@RequestMapping("/api")
+public class HelloController {
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello REST!";
+    }
+}
+
+Access:
+http://localhost:8080/api/hello
+
+```
+
+### 🔹 RESTful Web Service – JSON Example
+```
+@RestController
+public class UserController {
+
+    @GetMapping("/user")
+    public User getUser() {
+        return new User(1, "Amit", "amit@gmail.com");
+    }
+}
+
+Output (JSON):
+{
+  "id": 1,
+  "name": "Amit",
+  "email": "amit@gmail.com"
+}
+
+```
+Spring Boot automatically converts Java object → JSON (Jackson).
+
+### 🔹 RESTful Web Service – CRUD Example (Static Data)
+```
+@RestController
+@RequestMapping("/students")
+public class StudentController {
+
+    private List<Student> list = new ArrayList<>();
+
+    @GetMapping
+    public List<Student> getAll() {
+        return list;
+    }
+
+    @PostMapping
+    public Student add(@RequestBody Student s) {
+        list.add(s);
+        return s;
+    }
+
+    @PutMapping("/{id}")
+    public Student update(@PathVariable int id, @RequestBody Student s) {
+        for (Student st : list) {
+            if (st.getId() == id) {
+                st.setName(s.getName());
+                return st;
+            }
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id) {
+        list.removeIf(s -> s.getId() == id);
+    }
+}
+```
+### 🔹 Using POSTMAN to Invoke REST APIs
+In Postman:
+```
+GET http://localhost:8080/students
+POST http://localhost:8080/students
+Body → JSON
+{ "id": 1, "name": "Amit" }
+
+PUT http://localhost:8080/students/1
+DELETE http://localhost:8080/students/1
+
+Postman helps test APIs without UI.
+```
+
+#### 🔹 REST Service Invocation using RestTemplate
+
+Spring client to consume REST APIs:
+```
+RestTemplate rt = new RestTemplate();
+
+// GET
+Student s = rt.getForObject(
+    "http://localhost:8080/students/1",
+    Student.class
+);
+
+// POST
+Student newStd = new Student(2, "Neha");
+rt.postForObject(
+    "http://localhost:8080/students",
+    newStd,
+    Student.class
+);
+
+```
+Other methods: <br>
+- getForObject()
+- postForObject()
+- put()
+- delete()
+
+Summary
+```
+Web services enable system-to-system communication
+REST is lightweight and widely used
+Spring Boot makes REST development easy
+@RestController builds APIs
+JSON is default data format
+CRUD APIs use HTTP methods
+Postman tests APIs
+RestTemplate consumes REST services
+```
