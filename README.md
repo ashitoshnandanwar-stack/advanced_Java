@@ -782,4 +782,185 @@ Complex filtering
 
 <hr>
 
-## **🌱 Spring Framework**
+## 🌱 Spring Framework
+
+🔹 What is Spring Framework?
+Spring is a lightweight, open-source Java framework used to build enterprise applications. <br>
+It provides: <br>
+- Loose coupling
+- Easy configuration
+- Built-in support for MVC, Security, ORM, Transactions, etc.
+- Faster development with less boilerplate code
+- Core idea: Dependency Injection + Inversion of Control <br>
+
+Flow
+```
+Client → DispatcherServlet → Controller → Model → ViewResolver → View
+```
+
+### 🔹 Spring Modules Overview
+| Module  | Purpose                     |
+| ------- | --------------------------- |
+| Core    | IoC, DI                     |
+| Beans   | Bean management             |
+| Context | Application context         |
+| AOP     | Aspect-Oriented Programming |
+| JDBC    | DB access                   |
+| ORM     | Hibernate/JPA               |
+| Web     | Web support                 |
+| Web MVC | Spring MVC                  |
+| Test    | Testing support             |
+
+### 🔹 Spring 4 Annotations (Basic)
+```
+@Component – Generic bean
+@Service – Business layer
+@Repository – DAO layer
+@Controller – MVC controller
+@Autowired – Inject dependency
+@Configuration – Config class
+@Bean – Define bean
+@RequestMapping – URL mapping
+```
+
+### IoC (Inversion of Control)
+
+IoC means the control of creating and managing objects is transferred from the programmer to a container/framework (like Spring). <br>
+Instead of you creating objects, the container creates and provides them. <br>
+```
+Using Spring
+
+@Component
+class Car {
+    public void drive() {
+        System.out.println("Car is running");
+    }
+}
+
+
+Spring creates the object internally using new.
+You receive it like this:
+
+@Component
+class Showroom {
+
+    @Autowired
+    private Car car;
+
+    public void test() {
+        car.drive();
+    }
+}
+
+Here:
+You never wrote new Car()
+Spring did: new Car() internally
+Spring injected that object into Showroom
+```
+
+### DI (Dependency Injection)
+
+Dependency Injection is a technique used in IoC where the container injects the required object (dependency) into another object instead of that object creating it. <br>
+
+In simple words: An object gets its required objects from outside. <br>
+
+### 🔹 Spring Beans
+- A Bean is an object managed by Spring.
+```
+How to Create a Spring Bean
+Using Annotations (Most common)
+@Component
+public class Car {
+    public void drive() {
+        System.out.println("Car running...");
+    }
+}
+
+Other stereotype annotations:
+@Service – Service layer
+@Repository – DAO layer
+@Controller / @RestController – Web layer
+
+Spring automatically scans and creates these as beans.
+```
+
+### Autowiring Beans in Spring
+Autowiring means Spring automatically injects one bean into another bean without you manually writing configuration.<br>
+It is part of Dependency Injection (DI). <br>
+```
+Example
+@Component
+class Engine {
+    public void start() {
+        System.out.println("Engine started");
+    }
+}
+
+@Component
+class Car {
+
+    @Autowired
+    private Engine engine;   // Automatically injected
+
+    public void drive() {
+        engine.start();
+        System.out.println("Car is moving");
+    }
+}
+Here:
+Spring creates Engine and Car
+Spring finds that Car needs Engine
+Spring injects the Engine object into Car
+You never write new Engine().
+```
+
+### 🔹 Bean Scopes
+| Scope               | Meaning                  |
+| ------------------- | ------------------------ |
+| singleton (default) | One object per container |
+| prototype           | New object every time    |
+| request             | Per HTTP request         |
+| session             | Per session              |
+| application         | Per app                  |
+
+
+### Thymeleaf
+
+- Thymeleaf is a modern server-side Java template engine used with Spring / Spring Boot to create dynamic web pages.
+- It replaces JSP in Spring Boot applications and follows MVC architecture:
+```
+Controller → sends data
+Thymeleaf View → displays data
+Model → carries data
+```
+Why Thymeleaf?
+```
+Natural templates (works as normal HTML in browser)
+No JSP configuration in Spring Boot
+Clean syntax
+Tight integration with Spring
+Supports HTML5
+```
+
+### 🌍 Spring i18n & Localization
+- i18n (Internationalization) in Spring allows your application to support multiple languages based on user locale (country/language).
+Localization means showing content in the user’s preferred language.
+- Spring uses message properties files to store translations.
+
+🔹 File Upload Example
+```
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="file"/>
+</form>
+
+Controller:
+@PostMapping("/upload")
+public String upload(@RequestParam MultipartFile file) {
+    file.transferTo(new File("D:/"+file.getOriginalFilename()));
+    return "success";
+}
+```
+
+<hr>
+
+## 🚀 Spring Boot Essentials
