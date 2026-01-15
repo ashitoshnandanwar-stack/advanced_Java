@@ -203,7 +203,8 @@ Easier versioning and monitoring
 - So, API Gateway = A central access point that manages, secures, and routes requests from clients to microservices.
 
 <hr>
-## *Service Discovery
+
+## *Service Discovery*
 - Service Discovery is a mechanism that helps microservices find and communicate with each other automatically without hard-coding IP addresses or ports.
 
 - In Microservices, services are:
