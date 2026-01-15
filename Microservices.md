@@ -212,7 +212,9 @@ Deployed dynamically
 Scaled up/down
 Moved across servers
 ```
-- Types of Service Discovery
+
+Types of Service Discovery
+
 | Type                      | Description                                                                   |
 | ------------------------- | ----------------------------------------------------------------------------- |
 | **Client-Side Discovery** | Client asks registry and chooses service instance (e.g., Eureka + Ribbon)     |
