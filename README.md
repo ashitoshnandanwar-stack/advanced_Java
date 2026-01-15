@@ -360,3 +360,219 @@ public class Course {
 <hr>
 <hr>
 
+## Servlet
+
+### *Advantages of Servlets over CGI*
+
+| CGI                           | Servlets                        |
+| ----------------------------- | ------------------------------- |
+| New process for every request | Single instance, multi-threaded |
+| Slow performance              | High performance                |
+| Platform dependent            | Platform independent (Java)     |
+| No session handling           | Built-in session support        |
+| Hard to maintain              | Easy to maintain                |
+
+
+### *Servlet Annotations*
+```
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
+}
+```
+- Replaces web.xml mapping.
+
+### *Servlet Life Cycle*
+
+Managed by the container (Tomcat). <br>
+- init() – Called once when servlet is created
+- service() – Called for every request
+- destroy() – Called before servlet is removed
+
+
+### HttpServlet, HttpServletRequest, HttpServletResponse
+
+*1️⃣ HttpServlet*
+- HttpServlet is an abstract class used to create web components that handle HTTP requests.
+- It belongs to jakarta.servlet.http (or javax.servlet.http in older versions)
+- You extend it to create your own servlet <br>
+
+It provides methods like: <br>
+- doGet()
+- doPost()
+- doPut()
+- doDelete()
+
+| Method       | HTTP Method | Purpose                |
+| ------------ | ----------- | ---------------------- |
+| `doGet()`    | GET         | Read / fetch data      |
+| `doPost()`   | POST        | Send new data (create) |
+| `doPut()`    | PUT         | Update existing data   |
+| `doDelete()` | DELETE      | Remove data            |
+
+*2️⃣ HttpServletRequest*
+
+Represents the client’s request. <br>
+Used to: <br>
+- Read form data
+- Read query parameters
+- Read headers
+- Read cookies
+- Get session
+
+*3️⃣ HttpServletResponse*
+
+Represents the server’s response sent back to the client.
+Used to: <br>
+- Send data to client
+- Set status codes
+- Set headers
+- Redirect user
+
+### *Session Management*
+
+Session management is used to maintain user state across multiple HTTP requests. <br>
+Since HTTP is stateless, servers use cookies + session IDs to remember users. <br>
+
+Ways to maintain state: <br>
+- Cookies
+- URL Rewriting
+- HttpSession
+
+### *🔁 RequestDispatcher (Servlet)*
+- RequestDispatcher is used in Java web applications to forward a request from one resource to another (Servlet, JSP, HTML) on the server side.
+- In RequestDispather has two main method: forward() and include()
+
+| Feature        | `forward()`                         | `include()`                              |
+| -------------- | ----------------------------------- | ---------------------------------------- |
+| Control        | Transfers control completely        | Includes output of another resource      |
+| Response       | Original servlet stops executing    | Original servlet continues after include |
+| Output         | Only target resource output is sent | Both outputs are combined                |
+| URL in browser | Remains same                        | Remains same                             |
+| Use case       | Page navigation                     | Reusing common content                   |
+
+
+### *PageNavigation*
+
+Page Navigation means moving the user from one page to another in a web application. <br>
+In Servlets/JSP, it is mainly done using: <br>
+1. RequestDispatcher.forward() – Server-side navigation
+2. response.sendRedirect() – Client-side navigation <br>
+
+Difference between RequestDispather.forward() and response.sendRedirect()
+
+| Feature        | `RequestDispatcher.forward()`                 | `response.sendRedirect()`                      |
+| -------------- | --------------------------------------------- | ---------------------------------------------- |
+| Type           | Server-side                                   | Client-side                                    |
+| Request object | Same request is used                          | New request is created                         |
+| URL in browser | Does **not** change                           | **Changes**                                    |
+| Speed          | Faster (no extra round trip)                  | Slower (extra request)                         |
+| Data sharing   | Can share data using `request.setAttribute()` | Cannot use request data                        |
+| Scope          | Only inside same web application              | Can go to another application or external site |
+
+<hr>
+
+## JSP (Java Server Page)
+
+### *JSP Elements*
+
+1. Directives
+```
+Provide instructions to the container.
+Types:
+1️⃣ page Directive
+Used to configure page-level settings.
+<%@ page contentType="text/html" import="java.util.*" %>
+
+2️⃣ include Directive
+Used to include another file statically (at compile time).
+<%@ include file="header.jsp" %>
+
+3️⃣ taglib Directive
+Used to enable JSTL or custom tags.
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+```
+
+2. Implicit Objects
+Automatically available in JSP:
+
+| Object        | Purpose             |
+| ------------- | ------------------- |
+| `request`     | Client request data |
+| `response`    | Response to client  |
+| `session`     | User session        |
+| `application` | App-wide data       |
+| `out`         | Output writer       |
+| `config`      | Servlet config      |
+| `pageContext` | Access all scopes   |
+| `page`        | Current JSP object  |
+| `exception`   | Error pages only    |
+
+3. Scriptlets, Expressions & Declarations
+```
+<% int a = 10; %>              <!-- Scriptlet -->
+<%= a %>                       <!-- Expression -->
+<%! int b = 20; %>             <!-- Declaration -->
+```
+⚠️ Modern JSP avoids scriptlets—use EL & JSTL instead.
+
+4. Expression Language (EL)
+Used to access data simply:
+```
+${user.name}
+${sessionScope.cart}
+${param.id}
+
+Benefits:
+No Java code in JSP
+Clean & readable
+Auto null handling
+```
+| HTML                               | JSP                                                     |
+| ---------------------------------- | ------------------------------------------------------- |
+| Used to display **static content** | Used to generate **dynamic content**                    |
+| Cannot contain Java logic          | Can contain Java code, EL, JSTL                         |
+| Browser requests `.html` directly  | `.jsp` is converted into a **Servlet** by the container |
+| Same output for every user         | Output can change based on user, data, session          |
+| No server-side processing          | Server-side processing supported                        |
+
+### Scope in JSP
+
+| Scope         | Lifetime         |
+| ------------- | ---------------- |
+| `page`        | Current JSP only |
+| `request`     | Single request   |
+| `session`     | User session     |
+| `application` | Entire app       |
+
+### JSP Error Page Handling
+
+JSP provides a built-in mechanism to handle runtime errors gracefully by redirecting the user to a custom error page instead of showing a server error. <br>
+
+It is done using two attributes of the page directive:
+```
+errorPage – used in the main JSP
+isErrorPage – used in the error JSP
+```
+
+### JSTL (JSP Standard Tag Library)
+
+JSTL is a collection of ready-made JSP tags used to perform common tasks like
+looping, conditions, formatting, and database operations—without writing Java code in JSP. <br>
+
+It helps keep JSP clean, readable, and MVC-compliant. <br>
+
+To use JSTL in JSP <br>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <br>
+
+Main JSTL Tag Libraries
+| Library   | Prefix | Purpose                      |
+| --------- | ------ | ---------------------------- |
+| Core      | `c`    | Conditions, loops, variables |
+| Format    | `fmt`  | Date & number formatting     |
+| SQL       | `sql`  | Database operations          |
+| XML       | `x`    | XML processing               |
+| Functions | `fn`   | String functions             |
+
+<hr>
+
+
