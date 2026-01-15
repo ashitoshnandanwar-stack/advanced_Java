@@ -575,4 +575,210 @@ Main JSTL Tag Libraries
 
 <hr>
 
+## Hibernate Framework
+
+Hibernate is a Java ORM (Object–Relational Mapping) framework that maps Java objects to database tables and handles: <br>
+- CRUD operations
+- SQL generation
+- Transaction management
+- Caching
+- Relationship handling
+
+It removes boilerplate JDBC code and makes applications database-independent. <br>
+
+### Hibernate Architecture
+```
+Application
+    |
+SessionFactory
+    |
+ Session  --->  Persistent Objects (Entities)
+    |
+Transaction
+    |
+   JDBC
+    |
+ Database
+```
+
+Core Components 
+
+| Component        | Role                              |
+| ---------------- | --------------------------------- |
+| `Configuration`  | Loads Hibernate config & mappings |
+| `SessionFactory` | Heavy object; creates Sessions    |
+| `Session`        | Represents DB connection          |
+| `Transaction`    | Manages atomic operations         |
+| `Query`          | Executes HQL/Criteria/SQL         |
+| `Entity`         | POJO mapped to a table            |
+
+### Lifecycle of Hibernate Entities
+A Hibernate entity passes through different states during its life in an application. <br>
+These states describe how the object is related to the database and the Hibernate Session. <br>
+
+| State          | Description                               |
+| -------------- | ----------------------------------------- |
+| **Transient**  | New object, not associated with Hibernate |
+| **Persistent** | Associated with a Session                 |
+| **Detached**   | Session closed, object still exists       |
+| **Removed**    | Marked for deletion                       |
+
+Example:
+```
+Student s = new Student();      // Transient
+session.save(s);               // Persistent
+session.close();               // Detached
+session.delete(s);             // Removed
+```
+
+*1️⃣ Transient State*
+Object is created using new <br>
+Not associated with Hibernate Session <br>
+Not stored in the database
+```
+Student s = new Student(); // Transient
+s.setName("Amit");
+```
+Characteristics: <br>
+No primary key value (or not managed)
+Hibernate doesn’t know about it
+
+*2️⃣ Persistent State*
+Object is associated with a Hibernate Session <br>
+Represented in the database
+```
+Session session = factory.openSession();
+Transaction tx = session.beginTransaction();
+session.save(s);  // Becomes Persistent
+tx.commit();
+```
+Characteristics:
+- Managed by Hibernate
+- Any change is automatically synchronized with DB
+- Inside Session cache
+
+*3️⃣ Detached State*
+Session is closed, but object still exists <br>
+No longer managed by Hibernate
+```
+session.close();  // s becomes Detached
+s.setName("Rahul");  // Change not auto-saved
+```
+Characteristics: <br>
+- Has DB identity (primary key exists) 
+- Changes are not reflected unless reattached
+
+To reattach: <br>
+session.update(s);   // Detached → Persistent
+
+*4️⃣ Removed (Deleted) State*
+Object is marked for deletion
+```
+session.delete(s);
+```
+Characteristics:
+```
+Will be removed from DB on commit
+No longer persistent after deletion
+```
+
+### Hibernate Mappings & Relationships
+
+| Relationship | Annotation    |
+| ------------ | ------------- |
+| One-to-One   | `@OneToOne`   |
+| One-to-Many  | `@OneToMany`  |
+| Many-to-One  | `@ManyToOne`  |
+| Many-to-Many | `@ManyToMany` |
+
+
+### Collection & Component Mapping
+Collection Mapping
+```
+@ElementCollection
+private List<String> skills;
+```
+Component (Embedded Object)
+```
+@Embeddable
+class Address {
+    String city;
+    String pin;
+}
+
+@Embedded
+private Address address;
+```
+
+### HQL, Named Queries & Criteria
+
+HQL (Hibernate Query Language)
+```
+Query q = session.createQuery("from Student where age > 18");
+List<Student> list = q.list();
+```
+
+Named Queries
+```
+A Named Query is a predefined, reusable query identified by a name.
+It is written once (in entity class or XML) and used anywhere in the application.
+
+They improve:
+Readability
+Reusability
+Performance (parsed at startup)
+Maintainability
+
+Defining a Named Query (Annotation)
+@Entity
+@NamedQuery(
+    name = "Student.findAll",
+    query = "FROM Student"
+)
+public class Student {
+    @Id
+    private int id;
+    private String name;
+}
+
+
+You can also define multiple queries:
+
+@NamedQueries({
+    @NamedQuery(name = "Student.byName",
+                query = "FROM Student s WHERE s.name = :name"),
+    @NamedQuery(name = "Student.byId",
+                query = "FROM Student s WHERE s.id = :id")
+})
+
+Using a Named Query:
+Query q = session.createNamedQuery("Student.byName");
+q.setParameter("name", "Amit");
+
+List<Student> list = q.list();
+```
+```
+Types of Named Queries
+1.HQL Named Query
+@NamedQuery(name="findAll", query="FROM Student")
+
+2.Native SQL Named Query
+@NamedNativeQuery(
+    name = "Student.nativeAll",
+    query = "SELECT * FROM student",
+    resultClass = Student.class
+)
+```
+Criteria Query (Type-safe) – Hibernate / JPA
+```
+The Criteria API provides a type-safe way to build queries using Java objects instead of writing HQL/SQL strings.
+Errors are caught at compile time, not at runtime.
+
+It is mainly used for:
+Dynamic queries
+Type safety
+Complex filtering
+```
+
+<hr>
 
